@@ -1,0 +1,4 @@
+> build
+> print life
+> print nonexistentword
+> exit

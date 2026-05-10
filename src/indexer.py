@@ -9,5 +9,9 @@ def build_index(pages):
     return index
 
 def save_index(index, filename="data/index.json"):
-    with open(filename, "w") as f:
-        json.dump(index, f)
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(index, f, indent=2)
+
+def load_index(filename="data/index.json"):
+    with open(filename, "r", encoding="utf-8") as f:
+        return json.load(f)
