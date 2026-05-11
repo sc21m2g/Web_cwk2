@@ -16,7 +16,9 @@ def build_index(pages):
 
 
 def save_index(index, filename="data/index.json"):
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    directory = os.path.dirname(filename)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
 
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(index, f, indent=2, ensure_ascii=False)

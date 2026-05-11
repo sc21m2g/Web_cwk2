@@ -1,12 +1,27 @@
+import re
+
+
 def print_word(index, word):
-    word = word.lower()
+    word = word.lower().strip()
+
+    if not word:
+        print("Please provide a word to print.")
+        return
+
     if word in index:
-        print(index[word])
+        pages = index[word]
+        print(f"Word: {word}")
+        print(f"Found on {len(pages)} page(s):")
+        for url in sorted(pages):
+            positions = pages[url]
+            print(f"- {url}")
+            print(f"  Positions: {positions}")
     else:
-        print("Word not found")
+        print(f"Word not found: {word}")
+
 
 def find_query(index, query):
-    words = query.lower().split()
+    words = re.findall(r"[a-zA-Z0-9']+", query.lower())
 
     if not words:
         return []
@@ -24,4 +39,4 @@ def find_query(index, query):
         else:
             result_pages = result_pages.intersection(pages)
 
-    return list(result_pages)
+    return sorted(result_pages)

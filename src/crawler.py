@@ -40,7 +40,9 @@ def crawl_site(base_url="https://quotes.toscrape.com/"):
 
 
 def save_pages(pages, filename="data/pages.json"):
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    directory = os.path.dirname(filename)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
 
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(pages, f, indent=2, ensure_ascii=False)

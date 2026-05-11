@@ -17,6 +17,8 @@ This project is a small Python crawler and search tool. It crawls all quote page
 - Load a previously saved index
 - Print index information for a single word
 - Find pages that contain one or more query words
+- Clear command-line output and helpful error messages
+- Unit tests for the crawler, indexer, and search functions
 
 ## Project Structure
 
@@ -30,21 +32,23 @@ cwk2/
 |   |-- indexer.py
 |   |-- main.py
 |   `-- search.py
+|-- tests/
+|   |-- test_crawler.py
+|   |-- test_indexer.py
+|   `-- test_search.py
+|-- requirements.txt
 |-- readme.md
 ```
 
 ## Requirements
 
-The project uses Python and the following packages:
-
-- `requests`
-- `beautifulsoup4`
-
-Install them with:
+Install the project dependencies with:
 
 ```bash
-pip install requests beautifulsoup4
+pip install -r requirements.txt
 ```
+
+The requirements file includes `requests`, `beautifulsoup4`, and `pytest`.
 
 ## How to Run
 
@@ -57,6 +61,8 @@ python src/main.py
 The program will start an interactive command prompt:
 
 ```text
+Web Crawler Search Tool
+Type 'help' to see available commands.
 >
 ```
 
@@ -68,8 +74,19 @@ The program will start an interactive command prompt:
 build
 ```
 
-This command crawls the target website, builds the inverted index, and saves it to `data/index.json`.
-It also saves the crawled page text to `data/pages.json`.
+This command crawls the target website, saves the page text to `data/pages.json`, builds the inverted index, and saves it to `data/index.json`.
+
+Example output:
+
+```text
+Starting crawl...
+Crawling: https://quotes.toscrape.com/
+Waiting 6 seconds before next request...
+...
+Saved crawled pages to data/pages.json (10 page(s)).
+Built index with 1644 unique word(s).
+Saved index to data/index.json.
+```
 
 ### Load the Index
 
@@ -78,6 +95,8 @@ load
 ```
 
 This command loads the saved index from `data/index.json`.
+
+If the index file is missing or invalid, the program prints a clear error message.
 
 ### Print a Word Entry
 
@@ -92,6 +111,15 @@ print life
 ```
 
 This prints the indexed page and word positions for `life`.
+
+Example output:
+
+```text
+Word: life
+Found on 10 page(s):
+- https://quotes.toscrape.com/
+  Positions: [15, 22, 39]
+```
 
 ### Find Pages
 
@@ -119,35 +147,52 @@ quit
 
 Either command stops the program.
 
+### Help
+
+```text
+help
+```
+
+This command prints the list of available commands.
+
 ## Example Session
 
 ```text
+Web Crawler Search Tool
+Type 'help' to see available commands.
 > build
+Starting crawl...
 Crawling: https://quotes.toscrape.com/
 Waiting 6 seconds before next request...
 Crawling: https://quotes.toscrape.com/page/2/
 Waiting 6 seconds before next request...
 ...
 Crawling: https://quotes.toscrape.com/page/10/
-Pages crawled and saved: 10 pages.
-Index built and saved.
+Saved crawled pages to data/pages.json (10 page(s)).
+Built index with 1644 unique word(s).
+Saved index to data/index.json.
 > load
-Index loaded.
+Index loaded from data/index.json (1644 unique word(s)).
 > find life
-Pages found:
-https://quotes.toscrape.com/
-https://quotes.toscrape.com/page/5/
-https://quotes.toscrape.com/page/8/
+Pages found for 'life' (10 result(s)):
+- https://quotes.toscrape.com/
+- https://quotes.toscrape.com/page/10/
+- https://quotes.toscrape.com/page/2/
 ...
 > print love
-{'https://quotes.toscrape.com/': [197, 269], ...}
+Word: love
+Found on 10 page(s):
+- https://quotes.toscrape.com/
+  Positions: [197, 269]
+...
 > find good friends
-Pages found:
-https://quotes.toscrape.com/
-https://quotes.toscrape.com/page/7/
-https://quotes.toscrape.com/page/2/
+Pages found for 'good friends' (6 result(s)):
+- https://quotes.toscrape.com/
+- https://quotes.toscrape.com/page/2/
+- https://quotes.toscrape.com/page/3/
 ...
 > exit
+Goodbye.
 ```
 
 ## Version 3 Features
@@ -160,6 +205,17 @@ Version 3 adds:
 - Saved crawl output in `data/pages.json`
 - Cleaner regular-expression tokenisation in `indexer.py`
 - Safer command handling for empty `print` and `find` commands
+
+## Current Improvements
+
+This version also includes:
+
+- `requirements.txt` for repeatable dependency installation
+- Unit tests in the `tests` folder
+- Clearer command output with result counts and formatted page lists
+- Error handling for missing or invalid index files
+- Error handling when crawling returns no pages
+- A protected `main()` entry point so modules can be imported safely by tests
 
 ## Data Files
 
@@ -175,6 +231,24 @@ data/
 
 `index.json` stores the inverted index. Each word maps to the pages where it appears and the word positions on those pages.
 
+## Running Tests
+
+Run the unit tests from the project root:
+
+```bash
+python -m pytest
+```
+
+The tests cover:
+
+- Clean tokenisation and index building
+- Saving and loading the index
+- Single-word and multi-word AND search
+- Query punctuation handling
+- Clear `print` output
+- Crawler pagination and the 6 second wait, using mocked requests
+- Saving crawled pages to JSON
+
 ## Notes
 
-The crawler handles network errors without crashing. If a request fails, it prints an error message and stops crawling. Search uses AND logic for multi-word queries, so all query words must appear on the same page.
+The crawler handles network errors without crashing. If a request fails, it prints an error message and stops crawling. Search uses AND logic for multi-word queries, so all query words must appear on the same page. Search results are sorted to make the command output and tests stable.

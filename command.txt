@@ -1,4 +1,17 @@
-> build
-> print life
-> print nonexistentword
-> exit
+python src/main.py
+
+load
+print life
+print nonexistentword
+find life
+find good friends
+find abcdefg
+find
+print
+exit
+
+dir data
+
+pytest
+
+git log --oneline
