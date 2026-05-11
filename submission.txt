@@ -1,0 +1,12 @@
+COMP/XJCO3011 Coursework 2 Submission
+Name: Guo Mohan
+Student ID: 201587308(Leeds) 2021110028(SWJTU)
+
+Video demonstration link:
+https://github.com/sc21m2g/Web_cwk2.git
+
+GitHub repository URL:
+https://github.com/sc21m2g/Web_cwk2.git
+
+Compiled index file:
+The compiled index file is attached separately as data/index.json.
