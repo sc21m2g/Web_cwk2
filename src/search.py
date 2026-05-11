@@ -9,7 +9,6 @@ def find_query(index, query):
     words = query.lower().split()
 
     if not words:
-        print("Empty query")
         return []
 
     result_pages = None
